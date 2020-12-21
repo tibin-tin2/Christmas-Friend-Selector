@@ -1,22 +1,17 @@
 package com.tibin.christmasfriend;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.Build;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.tibin.christmasfriend.javaClass.DBHelper;
-import com.tibin.christmasfriend.javaClass.FriendsList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 public class nameSelector extends AppCompatActivity {
 
@@ -62,10 +57,6 @@ public class nameSelector extends AppCompatActivity {
     private List<Map<String, Boolean>> getNameListWithisSelected() {
         return myDb.getAllNamesWithIsSelected();
     }
-
-//    private void updateIsSelected(int id, Boolean isSelected) {
-//        myDb.updateIsSelectedInNames(id,isSelected);
-//    }
 
     private void generateButtons() {
         List<String> names = getNameList();

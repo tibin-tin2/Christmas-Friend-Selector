@@ -1,10 +1,10 @@
 package com.tibin.christmasfriend;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.tibin.christmasfriend.javaClass.DBHelper;
 
@@ -18,6 +18,7 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         Button clearIsSelected = findViewById(R.id.clearIsSelected);
+
         clearIsSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,7 +2,6 @@ package com.tibin.christmasfriend.javaClass;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -72,24 +70,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete("names", "id= ? ", new String[]{Integer.toString(id)});
     }
 
-//    public List<Map<String, Boolean>> getAllNames() {
-//        List<Map<String, Boolean>> names = new ArrayList<>();
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor res = db.rawQuery("SELECT * FROM names", null);
-//        res.moveToFirst();
-//
-//        while (res.isAfterLast() == false) {
-//            Map<String, Boolean> myMap = new HashMap<>();
-//            if(res.getInt(res.getColumnIndex("isSelected")) == 0) {
-//                myMap.put(res.getString(res.getColumnIndex("name")),Boolean.FALSE);
-//            } else {
-//                myMap.put(res.getString(res.getColumnIndex("name")),Boolean.TRUE);
-//            }
-//            names.add(myMap);
-//            res.moveToNext();
-//        }
-//        return names;
-//    }
 
     public List<String> getAllNames() {
 
@@ -150,18 +130,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update("names", contentValues, "name = ? ", new String[]{name});
     }
 
-//    public void updateIsSelectedInNames( SQLiteDatabase db) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put("isSelected", Boolean.TRUE ? 1 : 0);
-//        db.update("names", contentValues, "id = ? ", new String[]{Integer.toString(1)});
-//    }
 
     public void clearAllIsSelected() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("isSelected", 0);
-        db.update("names",contentValues,null, null);
+        db.update("names", contentValues, null, null);
     }
-
 }

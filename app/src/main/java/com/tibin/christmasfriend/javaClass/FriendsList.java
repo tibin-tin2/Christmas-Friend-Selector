@@ -23,7 +23,7 @@ public class FriendsList {
     }
 
     public void setNames(List<String> names) {
-        for(String name : names) {
+        for (String name : names) {
             this.names.add(name);
         }
     }

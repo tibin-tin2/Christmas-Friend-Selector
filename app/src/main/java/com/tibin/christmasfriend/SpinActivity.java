@@ -1,16 +1,11 @@
 package com.tibin.christmasfriend;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TextView;
 
 import com.tibin.christmasfriend.javaClass.DBHelper;
 import com.tibin.christmasfriend.javaClass.FriendsList;
@@ -26,20 +21,14 @@ public class SpinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_spin);
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
         TextView nameText = findViewById(R.id.viewName);
-
         List<String> names = getNames();
-
         nameText.setText(name);
-
         enableIsSelected(name);
-
     }
 
     private List<String> getNames() {
@@ -48,6 +37,6 @@ public class SpinActivity extends AppCompatActivity {
     }
 
     private void enableIsSelected(String name) {
-        myDb.updateIsSelectedInNames(name,Boolean.TRUE);
+        myDb.updateIsSelectedInNames(name, Boolean.TRUE);
     }
 }
