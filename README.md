@@ -11,9 +11,10 @@ Flags:
 4. CSS : to clear selected by flag for given name in the text box;
 5. Clear all is Selected : to clear selected flag for all friends;
 5. Clear all is Selected By : to clear selected by flag for all friends;
-6. Clear both Selected and Selected By flag for all users
+6. Clear All :Clear Selected, Selected By flag and christmas friend list for all users;
+7. Show Christmas Friend List : Shows the currently assigned Christmas friend list.
 
 
 Future Update plan :
 
-Some names are preloaded with the app. In the next update it will be removed and comes with empty names. users will have to add names.
+Some names are preloaded with the app. In the next update it will be removed.
