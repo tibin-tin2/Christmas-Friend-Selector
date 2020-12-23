@@ -35,21 +35,21 @@ Steps to use source code.
     
 eg structure 
 
-  christmas-friend-xxxxxxxxx
-  |_____names
-          |______0
-                  |_____isSelected: 0
-                  |_____isSelectedBy: 0
-                  |_____name: FirstName
-          |______1
-                  |_____isSelected: 0
-                  |_____isSelectedBy: 1
-                  |_____name: FirstName   
-          |______2
-                  |_____isSelected: 1
-                  |_____isSelectedBy: 0
-                  |_____name: FirstName
-          |______3
-                  |_____isSelected: 1
-                  |_____isSelectedBy: 1
-                  |_____name: FirstName
+  christmas-friend-xxxxxxxxx\
+  |_____names\
+          |______0\
+                  |_____isSelected: 0\
+                  |_____isSelectedBy: 0\
+                  |_____name: FirstName\
+          |______1\
+                  |_____isSelected: 0\
+                  |_____isSelectedBy: 1\
+                  |_____name: FirstName   \
+          |______2\
+                  |_____isSelected: 1\
+                  |_____isSelectedBy: 0\
+                  |_____name: FirstName\
+          |______3\
+                  |_____isSelected: 1\
+                  |_____isSelectedBy: 1\
+                  |_____name: FirstName\
