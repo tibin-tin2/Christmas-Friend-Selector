@@ -65,9 +65,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return numRows;
     }
 
-    public Integer deleteName(Integer id) {
+    public Integer deleteName(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("names", "id= ? ", new String[]{Integer.toString(id)});
+        return db.delete("names", "name = ? ", new String[]{name});
     }
 
 
@@ -104,20 +104,14 @@ public class DBHelper extends SQLiteOpenHelper {
         return names;
     }
 
-    public List<Map<String, Boolean>> getAllNamesWithIsSelectedByFalse() {
-        List<Map<String, Boolean>> names = new ArrayList<>();
+    public List<String> getAllNamesWithIsSelectedByFalse() {
+        List<String> names = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM names", null);
+        Cursor res = db.rawQuery("SELECT * FROM names WHERE isSelectedBy = '0'", null);
         res.moveToFirst();
 
         while (res.isAfterLast() == false) {
-            Map<String, Boolean> myMap = new HashMap<>();
-            if (res.getInt(res.getColumnIndex("isSelectedBy")) == 0) {
-                myMap.put(res.getString(res.getColumnIndex("name")), Boolean.FALSE);
-            } else {
-                myMap.put(res.getString(res.getColumnIndex("name")), Boolean.TRUE);
-            }
-            names.add(myMap);
+            names.add(res.getString(res.getColumnIndex("name")));
             res.moveToNext();
         }
         return names;
@@ -130,11 +124,48 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update("names", contentValues, "name = ? ", new String[]{name});
     }
 
+    public void updateIsSelectedByInNames(String name, Boolean isSelected) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isSelectedBy", isSelected ? 1 : 0);
+        db.update("names", contentValues, "name = ? ", new String[]{name});
+    }
+
 
     public void clearAllIsSelected() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("isSelected", 0);
         db.update("names", contentValues, null, null);
+    }
+
+    public void clearAllIsSelectedBy() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isSelectedBy", 0);
+        db.update("names", contentValues, null, null);
+    }
+
+    public void addNew(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", name);
+        contentValues.put("isSelected", 0);
+        contentValues.put("isSelectedBy", 0);
+        db.insert("names", null, contentValues);
+    }
+
+    public void clearIsSelected(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isSelected", 0);
+        db.update("names", contentValues, "name = ?", new String[]{name});
+    }
+
+    public void clearIsSelectedBy(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isSelectedBy", 0);
+        db.update("names", contentValues, "name = ?", new String[]{name});
     }
 }

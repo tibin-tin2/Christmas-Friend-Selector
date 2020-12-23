@@ -1,8 +1,8 @@
 package com.tibin.christmasfriend;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,19 +17,52 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
-        Button clearIsSelected = findViewById(R.id.clearIsSelected);
+        Button clearIsSelected = findViewById(R.id.clear_is_selected);
+        Button clearIsSelectedBy = findViewById(R.id.clear_is_selected_by);
+        Button clearAll = findViewById(R.id.clear_all);
 
-        clearIsSelected.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearAllIsSelected();
-            }
+        EditText name = findViewById(R.id.name);
+        Button add = findViewById(R.id.add);
+        Button delete = findViewById(R.id.delete);
+        Button clearSelected = findViewById(R.id.clear_is_selected_specific);
+        Button clearSelectedBy = findViewById(R.id.clear_is_selected_by_specific);
+
+        clearIsSelected.setOnClickListener(v -> clearAllIsSelected());
+        clearIsSelectedBy.setOnClickListener(v -> clearAllIsSelectedBy());
+        clearAll.setOnClickListener(v -> {
+            clearAllIsSelected();
+            clearAllIsSelectedBy();
         });
+
+        add.setOnClickListener(v -> addNew(name.getText().toString()));
+        delete.setOnClickListener(v -> deleteByName(name.getText().toString()));
+        clearSelected.setOnClickListener(v -> clearIsSelected(name.getText().toString()));
+        clearSelectedBy.setOnClickListener(v -> clearIsSelectedBy(name.getText().toString()));
     }
 
 
     private void clearAllIsSelected() {
         myDb.clearAllIsSelected();
+    }
+
+    private void clearAllIsSelectedBy() {
+        myDb.clearAllIsSelectedBy();
+    }
+
+    private void addNew(String name) {
+        myDb.addNew(name);
+    }
+
+    private void deleteByName(String name) {
+        myDb.deleteName(name);
+    }
+
+    private void clearIsSelected(String name) {
+        myDb.clearIsSelected(name);
+    }
+
+    private void clearIsSelectedBy(String name) {
+        myDb.clearIsSelectedBy(name);
     }
 
 }
