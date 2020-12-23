@@ -99,7 +99,6 @@ public class SpinActivity extends AppCompatActivity {
         mAccelLast = SensorManager.GRAVITY_EARTH;
     }
 
-
     private List<String> getNames() {
         return myDb.getAllNamesWithIsSelectedByFalse();
     }
@@ -133,7 +132,6 @@ public class SpinActivity extends AppCompatActivity {
         }
     }
 
-
     private void generateFriend() {
         List<String> names = getNames();
         int index = new Random().nextInt(names.size());
@@ -142,6 +140,7 @@ public class SpinActivity extends AppCompatActivity {
             setFriendText();
             enableIsSelected(name);
             enableIsSelectedBy(friend);
+            addToFriendsList(name, friend);
         } else {
             generateFriend();
         }
@@ -191,7 +190,6 @@ public class SpinActivity extends AppCompatActivity {
         isYourFiend.setVisibility(View.VISIBLE);
 
         disableProgressBar();
-
     }
 
     private void disableProgressBar() {
@@ -199,4 +197,7 @@ public class SpinActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    private void addToFriendsList(String name, String friend) {
+        myDb.insertFriendTable(name, friend);
+    }
 }

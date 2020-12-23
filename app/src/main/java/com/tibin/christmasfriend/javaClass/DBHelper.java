@@ -22,15 +22,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE names (id INTEGER PRIMARY KEY AUTOINCREMENT, name text, isSelected INTEGER DEFAULT 0, isSelectedBy INTEGER DEFAULT 0)");
+        db.execSQL("CREATE TABLE names (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, isSelected INTEGER DEFAULT 0, isSelectedBy INTEGER DEFAULT 0)");
+        db.execSQL("CREATE TABLE friends (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, friend TEXT)");
         List<String> names = new FriendsList().getNames();
         insertNames(names, db);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS names");
+        db.execSQL("DROP TABLE IF EXISTS friends");
         onCreate(db);
     }
 
@@ -70,7 +71,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete("names", "name = ? ", new String[]{name});
     }
 
-
     public List<String> getAllNames() {
 
         List<String> names = new ArrayList<>();
@@ -91,7 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("SELECT * FROM names", null);
         res.moveToFirst();
 
-        while (res.isAfterLast() == false) {
+        while (!res.isAfterLast()) {
             Map<String, Boolean> myMap = new HashMap<>();
             if (res.getInt(res.getColumnIndex("isSelected")) == 0) {
                 myMap.put(res.getString(res.getColumnIndex("name")), Boolean.FALSE);
@@ -110,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("SELECT * FROM names WHERE isSelectedBy = '0'", null);
         res.moveToFirst();
 
-        while (res.isAfterLast() == false) {
+        while (!res.isAfterLast()) {
             names.add(res.getString(res.getColumnIndex("name")));
             res.moveToNext();
         }
@@ -168,4 +168,24 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("isSelectedBy", 0);
         db.update("names", contentValues, "name = ?", new String[]{name});
     }
+
+    public void insertFriendTable(String name, String friend) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", name);
+        contentValues.put("friend", friend);
+        db.insert("friends", null, contentValues);
+    }
+
+    public void clearFriendsTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("friends", null, null);
+    }
+
+    public Cursor getAllFriends() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT name, friend FROM friends", null);
+        return res;
+    }
+
 }

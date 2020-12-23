@@ -3,6 +3,7 @@
     package="com.tibin.christmasfriend">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/cap_christmas"
@@ -10,12 +11,13 @@
         android:roundIcon="@mipmap/cap_christmas_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChristmasFriend">
-        <activity android:name=".AdminActivity"></activity>
+        <activity android:name=".FriendsViewTable"></activity>
+        <activity android:name=".AdminActivity" />
         <activity
             android:name=".SpinActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_spin"
-            android:theme="@style/Theme.ChristmasFriend.Fullscreen"></activity>
+            android:theme="@style/Theme.ChristmasFriend.Fullscreen" />
         <activity android:name=".nameSelector" />
         <activity android:name=".MainActivity">
             <intent-filter>

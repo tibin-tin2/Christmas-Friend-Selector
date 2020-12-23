@@ -20,4 +20,5 @@
     <string name="ClearIsSelectedSpecific">CS</string>
     <string name="ClearIsSelectedBySpecific">CSS</string>
     <string name="name">Name</string>
+    <string name="showFriendTable">Show Christmas Friends List</string>
 </resources>
