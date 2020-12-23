@@ -18,3 +18,38 @@ Flags:
 Future Update plan :
 
 Some names are preloaded with the app. In the next update it will be removed.
+
+_______
+UPDATE
+-------
+Added Google Firebase support. Source code for the firebase Support is in another new branch called ```using-firebase```. Firebase Configuration is not included in source code. 
+Steps to use source code. 
+1. import project in Android Studio.
+2. Tools -> Firebase and -> Realtime Database. And connect to Firebase and create a new Database in Firebase website; 
+3. Add a new node named ```names```
+4. next node will be the integere count starting from 0.
+5. after that add threee nodes. 
+    a. isSelected:0
+    b. isSelectedBy:0
+    c. name: FistName
+    
+eg structure 
+
+  christmas-friend-xxxxxxxxx
+  |_____names
+          |______0
+                  |_____isSelected: 0
+                  |_____isSelectedBy: 0
+                  |_____name: FirstName
+          |______1
+                  |_____isSelected: 0
+                  |_____isSelectedBy: 1
+                  |_____name: FirstName   
+          |______2
+                  |_____isSelected: 1
+                  |_____isSelectedBy: 0
+                  |_____name: FirstName
+          |______3
+                  |_____isSelected: 1
+                  |_____isSelectedBy: 1
+                  |_____name: FirstName
