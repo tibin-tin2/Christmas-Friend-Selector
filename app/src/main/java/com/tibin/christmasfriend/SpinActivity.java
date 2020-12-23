@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public class SpinActivity extends AppCompatActivity {
 
     final Handler handler = new Handler();
     final int delay = 1000;
+    final int threshold = 40;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,7 @@ public class SpinActivity extends AppCompatActivity {
             mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
-            if (mAccel > 14) {
+            if (mAccel > threshold) {
                 Toast.makeText(getApplicationContext(), "Keep Shaking your phone to get your friend", Toast.LENGTH_SHORT).show();
                 shakeActivity();
                 setShakeCount();
@@ -82,6 +84,8 @@ public class SpinActivity extends AppCompatActivity {
     protected void onResume() {
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
+        setIsShakeDone(Boolean.FALSE);
+        mAccel = 0f;
         super.onResume();
     }
 
@@ -135,7 +139,7 @@ public class SpinActivity extends AppCompatActivity {
     private void generateFriend() {
         List<String> names = getNames();
         int index = new Random().nextInt(names.size());
-        if (names.get(index) != name) {
+        if (!name.equalsIgnoreCase(names.get(index))) {
             friend = names.get(index);
             setFriendText();
             enableIsSelected(name);
@@ -144,7 +148,6 @@ public class SpinActivity extends AppCompatActivity {
         } else {
             generateFriend();
         }
-
     }
 
     private void setFriendText() {
@@ -162,6 +165,7 @@ public class SpinActivity extends AppCompatActivity {
             public void run() {
                 if (shakeCount > 0 && !isShakeDone) {
                     setIsShakeDone(Boolean.TRUE);
+                    shakeCount = 0;
                     generateFriend();
                     setVisibility();
                 } else {
@@ -199,5 +203,24 @@ public class SpinActivity extends AppCompatActivity {
 
     private void addToFriendsList(String name, String friend) {
         myDb.insertFriendTable(name, friend);
+    }
+
+    private void postActivity() {
+        setIsShakeDone(Boolean.FALSE);
+        mAccel = 0;
+
+        disableProgressBar();
+
+        TextView shake = findViewById(R.id.shake);
+        TextView friend = findViewById(R.id.friend_name);
+        TextView hurray = findViewById(R.id.hurray);
+        TextView congrats = findViewById(R.id.congrats);
+        TextView isYourFiend = findViewById(R.id.is_your_friend);
+
+        shake.setVisibility(View.VISIBLE);
+        friend.setVisibility(View.INVISIBLE);
+        hurray.setVisibility(View.INVISIBLE);
+        congrats.setVisibility(View.INVISIBLE);
+        isYourFiend.setVisibility(View.INVISIBLE);
     }
 }
