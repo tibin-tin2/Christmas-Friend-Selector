@@ -40,7 +40,7 @@ public class SpinActivity extends AppCompatActivity {
 
     final Handler handler = new Handler();
     final int delay = 1000;
-    final int threshold = 40;
+    final int threshold = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
