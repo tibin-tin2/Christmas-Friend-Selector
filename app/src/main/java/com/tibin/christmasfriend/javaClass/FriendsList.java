@@ -15,6 +15,7 @@ public class FriendsList {
         this.names.add("Shiya");
         this.names.add("Jinson");
         this.names.add("Anson");
+        this.names.add("Nicy");
         this.names.add("Tibin");
     }
 
