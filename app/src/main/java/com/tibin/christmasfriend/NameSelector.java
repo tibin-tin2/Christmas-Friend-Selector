@@ -1,5 +1,6 @@
 package com.tibin.christmasfriend;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,12 +20,14 @@ public class NameSelector extends AppCompatActivity {
 
     LinearLayout linearLayout;
     List<Integer> buttonId = new ArrayList<>();
-    ;
+    ProgressDialog dialog;
 
     @Override
     public void onResume() {
         super.onResume();
         setContentView(R.layout.activity_name_selector);
+
+        dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         database.getReference("names").addValueEventListener(new ValueEventListener() {
@@ -53,6 +56,7 @@ public class NameSelector extends AppCompatActivity {
             String name = (String) snapshot.child(String.valueOf(i)).child("name").getValue();
             Boolean isSelected = (snapshot.child(String.valueOf(i)).child("isSelected").getValue().toString().equals(String.valueOf(0))) ? Boolean.FALSE : Boolean.TRUE;
             generateButtons(i, name, isSelected);
+            dialog.dismiss();
         }
     }
 

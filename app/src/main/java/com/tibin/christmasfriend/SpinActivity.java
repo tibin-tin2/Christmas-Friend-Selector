@@ -1,5 +1,6 @@
 package com.tibin.christmasfriend;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -34,6 +35,7 @@ import java.util.Random;
 public class SpinActivity extends AppCompatActivity {
 
     private SensorManager mSensorManager;
+    ProgressDialog dialog;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
@@ -60,6 +62,8 @@ public class SpinActivity extends AppCompatActivity {
         actionBar.hide();
 
         name = getNameFromIntent();
+
+        dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
 
         checkShake();
         showText(name);
@@ -174,6 +178,7 @@ public class SpinActivity extends AppCompatActivity {
             }
         }
         setGetFriend(Boolean.TRUE);
+        dialog.dismiss();
     }
 
     private void setFriendText() {
