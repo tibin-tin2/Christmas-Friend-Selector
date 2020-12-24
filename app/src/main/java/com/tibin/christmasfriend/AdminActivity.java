@@ -27,8 +27,11 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         getAccess();
-        clearAllSelections();
-        clearFriendsInstance();
+
+        findViewById(R.id.clearAll).setOnClickListener(v -> {
+            clearAllSelections();
+            clearFriendsInstance();
+        });
     }
 
     private void clearAllSelections() {
