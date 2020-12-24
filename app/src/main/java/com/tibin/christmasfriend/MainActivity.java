@@ -29,11 +29,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 
     private void getNameSelectorActivity() {
-        Intent intent = new Intent(this, nameSelector.class);
+        Intent intent = new Intent(this, NameSelector.class);
         startActivity(intent);
     }
 

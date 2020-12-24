@@ -14,7 +14,7 @@
     <string name="friend">Friend</string>
     <string name="is_your_friend">is your friend.</string>
     <string name="ClearIsSelectedBy">Clear All is SelectedBy</string>
-    <string name="ClearAll">Clear All</string>
+    <string name="ClearAll">Clear All From Remote</string>
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="ClearIsSelectedSpecific">CS</string>

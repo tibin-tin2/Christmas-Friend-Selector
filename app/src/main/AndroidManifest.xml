@@ -11,14 +11,13 @@
         android:roundIcon="@mipmap/cap_christmas_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChristmasFriend">
-        <activity android:name=".FriendsViewTable"></activity>
-        <activity android:name=".AdminActivity" />
+        <activity android:name=".AdminActivity"></activity>
         <activity
             android:name=".SpinActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_spin"
             android:theme="@style/Theme.ChristmasFriend.Fullscreen" />
-        <activity android:name=".nameSelector" />
+        <activity android:name=".NameSelector" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

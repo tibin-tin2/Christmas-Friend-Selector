@@ -11,36 +11,45 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.tibin.christmasfriend.javaClass.DBHelper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 public class SpinActivity extends AppCompatActivity {
 
-    DBHelper myDb = new DBHelper(this);
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+
     String name;
     String friend;
+
     static int shakeCount = 0;
     Boolean isShakeDone = Boolean.FALSE;
+    Boolean isGetFriend = Boolean.FALSE;
 
     final Handler handler = new Handler();
     final int delay = 1000;
     final int threshold = 12;
+
+    List<String> names;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +63,6 @@ public class SpinActivity extends AppCompatActivity {
 
         checkShake();
         showText(name);
-
         initSensor();
     }
 
@@ -87,6 +95,7 @@ public class SpinActivity extends AppCompatActivity {
         setIsShakeDone(Boolean.FALSE);
         mAccel = 0f;
         super.onResume();
+        getFriends();
     }
 
     @Override
@@ -101,18 +110,6 @@ public class SpinActivity extends AppCompatActivity {
         mAccel = 10f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
-    }
-
-    private List<String> getNames() {
-        return myDb.getAllNamesWithIsSelectedByFalse();
-    }
-
-    private void enableIsSelected(String name) {
-        myDb.updateIsSelectedInNames(name, Boolean.TRUE);
-    }
-
-    private void enableIsSelectedBy(String name) {
-        myDb.updateIsSelectedByInNames(name, Boolean.TRUE);
     }
 
     private String getNameFromIntent() {
@@ -136,18 +133,47 @@ public class SpinActivity extends AppCompatActivity {
         }
     }
 
+
     private void generateFriend() {
-        List<String> names = getNames();
         int index = new Random().nextInt(names.size());
         if (!name.equalsIgnoreCase(names.get(index))) {
             friend = names.get(index);
             setFriendText();
-            enableIsSelected(name);
-            enableIsSelectedBy(friend);
-            addToFriendsList(name, friend);
+            updateIsSelectedByValue(friend);
+            updateIsSelectedValue(name);
+            updateFriendsTable(name, friend);
         } else {
             generateFriend();
         }
+    }
+
+    private void getFriends() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference reference = firebaseDatabase.getReference("names");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                getValues(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void getValues(DataSnapshot snapshot) {
+        names = new ArrayList<>();
+        int length = (int) snapshot.getChildrenCount();
+        for (int i = 0; i < length; i++) {
+            String name = (String) snapshot.child(String.valueOf(i)).child("name").getValue();
+            Boolean isSelectedBy = (snapshot.child(String.valueOf(i)).child("isSelectedBy").getValue().toString().equals(String.valueOf(0))) ? Boolean.FALSE : Boolean.TRUE;
+            if (!isSelectedBy) {
+                names.add(name);
+            }
+        }
+        setGetFriend(Boolean.TRUE);
     }
 
     private void setFriendText() {
@@ -163,8 +189,9 @@ public class SpinActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (shakeCount > 0 && !isShakeDone) {
+                if (shakeCount > 0 && !getIsShakeDone() && getGetFriend()) {
                     setIsShakeDone(Boolean.TRUE);
+                    setGetFriend(Boolean.FALSE);
                     shakeCount = 0;
                     generateFriend();
                     setVisibility();
@@ -178,6 +205,18 @@ public class SpinActivity extends AppCompatActivity {
 
     private void setIsShakeDone(Boolean isShakeDone) {
         this.isShakeDone = isShakeDone;
+    }
+
+    private Boolean getIsShakeDone() {
+        return this.isShakeDone;
+    }
+
+    public void setGetFriend(Boolean getFriend) {
+        isGetFriend = getFriend;
+    }
+
+    public Boolean getGetFriend() {
+        return isGetFriend;
     }
 
     private void setVisibility() {
@@ -201,26 +240,62 @@ public class SpinActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private void addToFriendsList(String name, String friend) {
-        myDb.insertFriendTable(name, friend);
+    private void updateIsSelectedByValue(String name) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference reference = firebaseDatabase.getReference("names");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer length = (int) snapshot.getChildrenCount();
+                for (int i = 0; i < length; i++) {
+                    if ((snapshot.child(String.valueOf(i)).child("name").getValue()).equals(name)) {
+                        snapshot.child(String.valueOf(i)).child("isSelectedBy").getRef().setValue(1);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-    private void postActivity() {
-        setIsShakeDone(Boolean.FALSE);
-        mAccel = 0;
+    private void updateIsSelectedValue(String name) {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference reference = firebaseDatabase.getReference("names");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer length = (int) snapshot.getChildrenCount();
+                for (int i = 0; i < length; i++) {
+                    if ((snapshot.child(String.valueOf(i)).child("name").getValue()).equals(name)) {
+                        snapshot.child(String.valueOf(i)).child("isSelected").getRef().setValue(1);
+                        break;
+                    }
+                }
+            }
 
-        disableProgressBar();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-        TextView shake = findViewById(R.id.shake);
-        TextView friend = findViewById(R.id.friend_name);
-        TextView hurray = findViewById(R.id.hurray);
-        TextView congrats = findViewById(R.id.congrats);
-        TextView isYourFiend = findViewById(R.id.is_your_friend);
-
-        shake.setVisibility(View.VISIBLE);
-        friend.setVisibility(View.INVISIBLE);
-        hurray.setVisibility(View.INVISIBLE);
-        congrats.setVisibility(View.INVISIBLE);
-        isYourFiend.setVisibility(View.INVISIBLE);
+            }
+        });
     }
+
+    private void updateFriendsTable(String name, String friend) {
+        FirebaseDatabase.getInstance().getReference("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.child(name).getRef().setValue(friend);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
